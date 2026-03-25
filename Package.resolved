@@ -1,0 +1,41 @@
+{
+  "pins" : [
+    {
+      "identity" : "capacitor-swift-pm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ionic-team/capacitor-swift-pm.git",
+      "state" : {
+        "revision" : "1f324fe7bdbdc8c5cc28bea48a231545a8c2e823",
+        "version" : "8.1.0"
+      }
+    },
+    {
+      "identity" : "cs_ios_crashreporter",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ContentSquare/CS_iOS_CrashReporter.git",
+      "state" : {
+        "revision" : "9f00d53c3d2c7a0b2d92a694fc9d4c993bb2b157",
+        "version" : "1.0.1"
+      }
+    },
+    {
+      "identity" : "cs_ios_sdk",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ContentSquare/CS_iOS_SDK.git",
+      "state" : {
+        "revision" : "40aad78a992dba9d9618acf8dac7a18245272e12",
+        "version" : "4.45.4"
+      }
+    },
+    {
+      "identity" : "csswiftprotobuf",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ContentSquare/CSSwiftProtobuf.git",
+      "state" : {
+        "revision" : "0f26877bd719c45219a3063696d0d1d600a08c48",
+        "version" : "1.33.3"
+      }
+    }
+  ],
+  "version" : 2
+}

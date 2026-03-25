@@ -1,0 +1,962 @@
+{
+  "api": {
+    "name": "ContentsquarePlugin",
+    "slug": "contentsquareplugin",
+    "docs": "Public Contentsquare API for Capacitor applications.",
+    "tags": [],
+    "methods": [
+      {
+        "name": "optIn",
+        "signature": "() => Promise<void>",
+        "parameters": [],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Marks the user as opted in and starts tracking.",
+        "complexTypes": [],
+        "slug": "optin"
+      },
+      {
+        "name": "optOut",
+        "signature": "() => Promise<void>",
+        "parameters": [],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Stops tracking, clears local Contentsquare state, and opts the user out.",
+        "complexTypes": [],
+        "slug": "optout"
+      },
+      {
+        "name": "sendScreenName",
+        "signature": "(name: string) => Promise<void>",
+        "parameters": [
+          {
+            "name": "name",
+            "docs": "",
+            "type": "string"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Sends a screenview event for the current screen.",
+        "complexTypes": [],
+        "slug": "sendscreenname"
+      },
+      {
+        "name": "sendTransaction",
+        "signature": "(transactionItem: TransactionItem) => Promise<void>",
+        "parameters": [
+          {
+            "name": "transactionItem",
+            "docs": "",
+            "type": "TransactionItem"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Sends a transaction to Contentsquare.",
+        "complexTypes": [
+          "TransactionItem"
+        ],
+        "slug": "sendtransaction"
+      },
+      {
+        "name": "sendDynamicVar",
+        "signature": "(dynamicVarItem: DynamicVarItem) => Promise<void>",
+        "parameters": [
+          {
+            "name": "dynamicVarItem",
+            "docs": "",
+            "type": "DynamicVarItem"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Sends a dynamic variable.\n\nThe value must be either a string or a non-negative integer.",
+        "complexTypes": [
+          "DynamicVarItem"
+        ],
+        "slug": "senddynamicvar"
+      },
+      {
+        "name": "excludeURLForReplay",
+        "signature": "(url: string) => Promise<void>",
+        "parameters": [
+          {
+            "name": "url",
+            "docs": "",
+            "type": "string"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Excludes URLs matching the provided JavaScript regular expression literal from Session Replay.\n\nExample: `\"/checkout/\"`.",
+        "complexTypes": [],
+        "slug": "excludeurlforreplay"
+      },
+      {
+        "name": "setPIISelectors",
+        "signature": "(pii: PIIConfig) => Promise<void>",
+        "parameters": [
+          {
+            "name": "pii",
+            "docs": "",
+            "type": "PIIConfig"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Applies Session Replay masking rules to specific selectors and attributes.",
+        "complexTypes": [
+          "PIIConfig"
+        ],
+        "slug": "setpiiselectors"
+      },
+      {
+        "name": "setCapturedElementsSelector",
+        "signature": "(elements: string) => Promise<void>",
+        "parameters": [
+          {
+            "name": "elements",
+            "docs": "",
+            "type": "string"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Allows specific elements to be captured even when the current page is masked.",
+        "complexTypes": [],
+        "slug": "setcapturedelementsselector"
+      }
+    ],
+    "properties": []
+  },
+  "interfaces": [
+    {
+      "name": "TransactionItem",
+      "slug": "transactionitem",
+      "docs": "Transaction payload sent to Contentsquare.",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "transactionValue",
+          "tags": [],
+          "docs": "Transaction value.",
+          "complexTypes": [],
+          "type": "number"
+        },
+        {
+          "name": "transactionCurrency",
+          "tags": [],
+          "docs": "ISO 4217 currency code.",
+          "complexTypes": [
+            "CurrencyCode"
+          ],
+          "type": "string"
+        },
+        {
+          "name": "transactionId",
+          "tags": [],
+          "docs": "Optional transaction identifier.",
+          "complexTypes": [],
+          "type": "string | undefined"
+        }
+      ]
+    },
+    {
+      "name": "DynamicVarItem",
+      "slug": "dynamicvaritem",
+      "docs": "Dynamic variable payload.",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "dynVarKey",
+          "tags": [],
+          "docs": "Contentsquare dynamic variable key.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "dynVarValue",
+          "tags": [],
+          "docs": "Dynamic variable value.\n\nUse either a string or a non-negative integer.",
+          "complexTypes": [],
+          "type": "string | number"
+        }
+      ]
+    },
+    {
+      "name": "PIIConfig",
+      "slug": "piiconfig",
+      "docs": "Selector and attribute masking configuration for Session Replay.",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "PIISelectors",
+          "tags": [],
+          "docs": "CSS selectors whose content must be masked.",
+          "complexTypes": [],
+          "type": "string[]"
+        },
+        {
+          "name": "Attributes",
+          "tags": [],
+          "docs": "Attribute masking rules for specific selectors.",
+          "complexTypes": [
+            "PIIAttribute"
+          ],
+          "type": "PIIAttribute[]"
+        }
+      ]
+    },
+    {
+      "name": "PIIAttribute",
+      "slug": "piiattribute",
+      "docs": "Attribute masking rule used by `setPIISelectors`.",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "selector",
+          "tags": [],
+          "docs": "CSS selector to match.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "attrName",
+          "tags": [],
+          "docs": "Attribute name or names to mask for matching elements.",
+          "complexTypes": [],
+          "type": "string | string[]"
+        }
+      ]
+    }
+  ],
+  "enums": [
+    {
+      "name": "CurrencyCode",
+      "slug": "currencycode",
+      "members": [
+        {
+          "name": "USD",
+          "value": "'USD'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "CAD",
+          "value": "'CAD'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "EUR",
+          "value": "'EUR'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "AED",
+          "value": "'AED'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "AFN",
+          "value": "'AFN'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "ALL",
+          "value": "'ALL'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "AMD",
+          "value": "'AMD'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "ARS",
+          "value": "'ARS'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "AUD",
+          "value": "'AUD'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "AZN",
+          "value": "'AZN'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "BAM",
+          "value": "'BAM'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "BDT",
+          "value": "'BDT'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "BGN",
+          "value": "'BGN'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "BHD",
+          "value": "'BHD'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "BIF",
+          "value": "'BIF'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "BND",
+          "value": "'BND'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "BOB",
+          "value": "'BOB'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "BRL",
+          "value": "'BRL'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "BWP",
+          "value": "'BWP'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "BYN",
+          "value": "'BYN'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "BZD",
+          "value": "'BZD'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "CDF",
+          "value": "'CDF'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "CHF",
+          "value": "'CHF'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "CLP",
+          "value": "'CLP'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "CNY",
+          "value": "'CNY'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "COP",
+          "value": "'COP'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "CRC",
+          "value": "'CRC'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "CVE",
+          "value": "'CVE'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "CZK",
+          "value": "'CZK'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "DJF",
+          "value": "'DJF'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "DKK",
+          "value": "'DKK'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "DOP",
+          "value": "'DOP'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "DZD",
+          "value": "'DZD'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "EEK",
+          "value": "'EEK'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "EGP",
+          "value": "'EGP'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "ERN",
+          "value": "'ERN'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "ETB",
+          "value": "'ETB'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "GBP",
+          "value": "'GBP'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "GEL",
+          "value": "'GEL'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "GHS",
+          "value": "'GHS'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "GNF",
+          "value": "'GNF'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "GTQ",
+          "value": "'GTQ'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "HKD",
+          "value": "'HKD'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "HNL",
+          "value": "'HNL'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "HRK",
+          "value": "'HRK'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "HUF",
+          "value": "'HUF'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "IDR",
+          "value": "'IDR'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "ILS",
+          "value": "'ILS'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "INR",
+          "value": "'INR'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "IQD",
+          "value": "'IQD'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "IRR",
+          "value": "'IRR'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "ISK",
+          "value": "'ISK'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "JMD",
+          "value": "'JMD'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "JOD",
+          "value": "'JOD'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "JPY",
+          "value": "'JPY'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "KES",
+          "value": "'KES'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "KHR",
+          "value": "'KHR'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "KMF",
+          "value": "'KMF'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "KRW",
+          "value": "'KRW'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "KWD",
+          "value": "'KWD'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "KZT",
+          "value": "'KZT'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "LBP",
+          "value": "'LBP'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "LKR",
+          "value": "'LKR'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "LTL",
+          "value": "'LTL'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "LVL",
+          "value": "'LVL'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "LYD",
+          "value": "'LYD'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "MAD",
+          "value": "'MAD'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "MDL",
+          "value": "'MDL'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "MGA",
+          "value": "'MGA'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "MKD",
+          "value": "'MKD'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "MMK",
+          "value": "'MMK'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "MOP",
+          "value": "'MOP'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "MUR",
+          "value": "'MUR'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "MXN",
+          "value": "'MXN'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "MYR",
+          "value": "'MYR'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "MZN",
+          "value": "'MZN'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "NAD",
+          "value": "'NAD'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "NGN",
+          "value": "'NGN'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "NIO",
+          "value": "'NIO'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "NOK",
+          "value": "'NOK'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "NPR",
+          "value": "'NPR'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "NZD",
+          "value": "'NZD'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "OMR",
+          "value": "'OMR'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "PAB",
+          "value": "'PAB'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "PEN",
+          "value": "'PEN'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "PHP",
+          "value": "'PHP'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "PKR",
+          "value": "'PKR'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "PLN",
+          "value": "'PLN'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "PYG",
+          "value": "'PYG'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "QAR",
+          "value": "'QAR'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "RON",
+          "value": "'RON'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "RSD",
+          "value": "'RSD'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "RUB",
+          "value": "'RUB'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "RWF",
+          "value": "'RWF'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "SAR",
+          "value": "'SAR'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "SDG",
+          "value": "'SDG'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "SEK",
+          "value": "'SEK'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "SGD",
+          "value": "'SGD'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "SOS",
+          "value": "'SOS'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "SYP",
+          "value": "'SYP'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "THB",
+          "value": "'THB'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "TND",
+          "value": "'TND'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "TOP",
+          "value": "'TOP'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "TRY",
+          "value": "'TRY'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "TTD",
+          "value": "'TTD'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "TWD",
+          "value": "'TWD'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "TZS",
+          "value": "'TZS'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "UAH",
+          "value": "'UAH'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "UGX",
+          "value": "'UGX'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "UYU",
+          "value": "'UYU'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "UZS",
+          "value": "'UZS'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "VEF",
+          "value": "'VEF'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "VND",
+          "value": "'VND'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "XAF",
+          "value": "'XAF'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "XOF",
+          "value": "'XOF'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "YER",
+          "value": "'YER'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "ZAR",
+          "value": "'ZAR'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "ZMK",
+          "value": "'ZMK'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "ZWL",
+          "value": "'ZWL'",
+          "tags": [],
+          "docs": ""
+        }
+      ]
+    }
+  ],
+  "typeAliases": [],
+  "pluginConfigs": []
+}
