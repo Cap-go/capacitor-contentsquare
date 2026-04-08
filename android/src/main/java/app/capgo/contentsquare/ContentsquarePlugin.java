@@ -204,7 +204,8 @@ public class ContentsquarePlugin extends Plugin {
             return;
         }
 
-        final String js = "window._uxa = window._uxa || [];\n" + "window._uxa.push([\"excludeURLforReplay\", " + urlPattern + "]);\n";
+        final String js =
+            "window._uxa = window._uxa || [];\n" + "window._uxa.push([\"excludeURLforReplay\", " + JSONObject.quote(urlPattern) + "]);\n";
         jsInjector.addToJSQueue("excludeURLForReplay: " + urlPattern, js);
         call.resolve();
     }

@@ -149,13 +149,18 @@ public class ContentsquarePlugin: CAPPlugin, CAPBridgedPlugin {
             return
         }
 
-        let script = """
-        window._uxa = window._uxa || [];
-        window._uxa.push(["excludeURLforReplay", \(urlPattern)]);
-        """
+        do {
+            let serializedPattern = try javaScriptStringLiteral(urlPattern)
+            let script = """
+            window._uxa = window._uxa || [];
+            window._uxa.push(["excludeURLforReplay", \(serializedPattern)]);
+            """
 
-        tagInjector.addToJSQueue(tag: "excludeURLForReplay: \(urlPattern)", jsToInject: script)
-        call.resolve()
+            tagInjector.addToJSQueue(tag: "excludeURLForReplay: \(urlPattern)", jsToInject: script)
+            call.resolve()
+        } catch {
+            call.reject("Failed to serialize URL pattern.", error.localizedDescription, error)
+        }
     }
 
     @objc func setPIISelectors(_ call: CAPPluginCall) {
