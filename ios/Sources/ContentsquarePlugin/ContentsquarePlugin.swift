@@ -2,7 +2,7 @@ import Capacitor
 import ContentsquareModule
 import Foundation
 
-@objc
+@objc(_ExternalBridgeInterface)
 protocol ExternalBridgeInterface {
     @objc func takeSnapshot(parameters: [String: Any])
     @objc func enableSessionReplay(parameters: [String: Any])
