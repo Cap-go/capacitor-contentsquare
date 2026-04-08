@@ -1,6 +1,6 @@
 {
   "name": "@capgo/capacitor-contentsquare",
-  "version": "8.0.1",
+  "version": "8.1.0",
   "iosSdkVersion": "4.45.4",
   "androidSdkVersion": "4.43.3",
   "description": "Capacitor plugin for the Contentsquare mobile analytics SDK on Capacitor 8.",
