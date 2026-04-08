@@ -1,6 +1,7 @@
 package app.capgo.contentsquare.util;
 
 public class JsTask {
+
     public final String jsToInject;
     public final String description;
 

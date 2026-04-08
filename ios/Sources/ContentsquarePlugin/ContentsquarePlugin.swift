@@ -3,7 +3,7 @@ import ContentsquareModule
 import Foundation
 
 @objc
-protocol _ExternalBridgeInterface {
+protocol ExternalBridgeInterface {
     @objc func takeSnapshot(parameters: [String: Any])
     @objc func enableSessionReplay(parameters: [String: Any])
     @objc func enableAPIErrors(parameters: [String: Any])
@@ -34,7 +34,7 @@ public class ContentsquarePlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "excludeURLForReplay", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "setPIISelectors", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "collect", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "onReady", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "onReady", returnType: CAPPluginReturnPromise)
     ]
 
     private var telemetry: ContentsquareTelemetry?
@@ -79,11 +79,11 @@ public class ContentsquarePlugin: CAPPlugin, CAPBridgedPlugin {
         }
 
         do {
-            let js = """
+            let script = """
             window._uxa = window._uxa || [];
             window._uxa.push(["trackPageview", \(try javaScriptStringLiteral(name))]);
             """
-            tagInjector.addToJSQueue(tag: "TrackPageview: \(name)", jsToInject: js)
+            tagInjector.addToJSQueue(tag: "TrackPageview: \(name)", jsToInject: script)
             call.resolve()
         } catch {
             call.reject("Failed to serialize screen name.", error.localizedDescription, error)
@@ -127,11 +127,11 @@ public class ContentsquarePlugin: CAPPlugin, CAPBridgedPlugin {
         }
 
         do {
-            let js = """
+            let script = """
             window._uxa = window._uxa || [];
             window._uxa.push(["setCapturedElementsSelector", \(try javaScriptStringLiteral(elements))]);
             """
-            tagInjector.addToJSQueue(tag: "setCapturedElementsSelector: \(elements)", jsToInject: js)
+            tagInjector.addToJSQueue(tag: "setCapturedElementsSelector: \(elements)", jsToInject: script)
             call.resolve()
         } catch {
             call.reject("Failed to serialize elements selector.", error.localizedDescription, error)
@@ -149,12 +149,12 @@ public class ContentsquarePlugin: CAPPlugin, CAPBridgedPlugin {
             return
         }
 
-        let js = """
+        let script = """
         window._uxa = window._uxa || [];
         window._uxa.push(["excludeURLforReplay", \(urlPattern)]);
         """
 
-        tagInjector.addToJSQueue(tag: "excludeURLForReplay: \(urlPattern)", jsToInject: js)
+        tagInjector.addToJSQueue(tag: "excludeURLForReplay: \(urlPattern)", jsToInject: script)
         call.resolve()
     }
 
@@ -176,7 +176,7 @@ public class ContentsquarePlugin: CAPPlugin, CAPBridgedPlugin {
 
         let piiObject: [String: Any] = [
             "PIISelectors": piiSelectors,
-            "Attributes": piiAttributes,
+            "Attributes": piiAttributes
         ]
 
         do {
@@ -186,11 +186,11 @@ public class ContentsquarePlugin: CAPPlugin, CAPBridgedPlugin {
                 return
             }
 
-            let js = """
+            let script = """
             window._uxa = window._uxa || [];
             window._uxa.push(["setPIISelectors", \(jsonString)]);
             """
-            tagInjector.addToJSQueue(tag: "setPIISelectors", jsToInject: js)
+            tagInjector.addToJSQueue(tag: "setPIISelectors", jsToInject: script)
             call.resolve()
         } catch {
             call.reject("Failed to serialize PII configuration.", error.localizedDescription, error)
@@ -218,7 +218,7 @@ public class ContentsquarePlugin: CAPPlugin, CAPBridgedPlugin {
             NSSelectorFromString("_registerExternalBridgeWithParameters:"),
             with: [
                 "interface": self,
-                "type": 4,
+                "type": 4
             ] as [String: Any]
         )
     }
@@ -235,7 +235,7 @@ public class ContentsquarePlugin: CAPPlugin, CAPBridgedPlugin {
     }
 }
 
-extension ContentsquarePlugin: _ExternalBridgeInterface {
+extension ContentsquarePlugin: ExternalBridgeInterface {
     func notifySDKStateChanges(parameters: [String: Any]) {
     }
 

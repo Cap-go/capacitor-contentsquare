@@ -4,9 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.webkit.WebView;
-
 import androidx.annotation.NonNull;
-
 import com.contentsquare.android.Contentsquare;
 import com.contentsquare.android.api.CsWebViewManager;
 import com.contentsquare.android.api.bridge.xpf.ExternalBridgeInterface;
@@ -19,10 +17,8 @@ import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
-
-import org.json.JSONObject;
-
 import java.lang.reflect.Method;
+import org.json.JSONObject;
 
 @CapacitorPlugin(name = "Contentsquare")
 public class ContentsquarePlugin extends Plugin {
@@ -40,28 +36,22 @@ public class ContentsquarePlugin extends Plugin {
 
             xpfBridge = new ExternalBridgeInterface() {
                 @Override
-                public void notifyShouldSendInitialInsertion() {
-                }
+                public void notifyShouldSendInitialInsertion() {}
 
                 @Override
-                public void updateBridgeConfig(@NonNull final String config) {
-                }
+                public void updateBridgeConfig(@NonNull final String config) {}
 
                 @Override
-                public void notifySrMaskingHasChanged(final boolean enabled) {
-                }
+                public void notifySrMaskingHasChanged(final boolean enabled) {}
 
                 @Override
-                public void notifySDKStateChanges(@NonNull final SDKStateChangeType changeType, @NonNull final SDKState sdkState) {
-                }
+                public void notifySDKStateChanges(@NonNull final SDKStateChangeType changeType, @NonNull final SDKState sdkState) {}
 
                 @Override
-                public void notifyCsInAppEnabled(final boolean enabled) {
-                }
+                public void notifyCsInAppEnabled(final boolean enabled) {}
 
                 @Override
-                public void notifySessionReplayEnabled(final boolean enabled) {
-                }
+                public void notifySessionReplayEnabled(final boolean enabled) {}
 
                 @NonNull
                 @Override
@@ -70,8 +60,7 @@ public class ContentsquarePlugin extends Plugin {
                 }
 
                 @Override
-                public void notifySrMaskingIndicatorHasChanged(final boolean value) {
-                }
+                public void notifySrMaskingIndicatorHasChanged(final boolean value) {}
             };
 
             webView.post(() -> {
@@ -102,8 +91,7 @@ public class ContentsquarePlugin extends Plugin {
             return;
         }
 
-        final String js = "window._uxa = window._uxa || [];\n"
-            + "window._uxa.push([\"trackPageview\", " + JSONObject.quote(name) + "]);\n";
+        final String js = "window._uxa = window._uxa || [];\n" + "window._uxa.push([\"trackPageview\", " + JSONObject.quote(name) + "]);\n";
         jsInjector.addToJSQueue("TrackPageview: " + name, js);
         call.resolve();
     }
@@ -199,8 +187,11 @@ public class ContentsquarePlugin extends Plugin {
             return;
         }
 
-        final String js = "window._uxa = window._uxa || [];\n"
-            + "window._uxa.push([\"setCapturedElementsSelector\", " + JSONObject.quote(elements) + "]);\n";
+        final String js =
+            "window._uxa = window._uxa || [];\n" +
+            "window._uxa.push([\"setCapturedElementsSelector\", " +
+            JSONObject.quote(elements) +
+            "]);\n";
         jsInjector.addToJSQueue("setCapturedElementsSelector: " + elements, js);
         call.resolve();
     }
@@ -213,16 +204,15 @@ public class ContentsquarePlugin extends Plugin {
             return;
         }
 
-        final String js = "window._uxa = window._uxa || [];\n"
-            + "window._uxa.push([\"excludeURLforReplay\", " + urlPattern + "]);\n";
+        final String js = "window._uxa = window._uxa || [];\n" + "window._uxa.push([\"excludeURLforReplay\", " + urlPattern + "]);\n";
         jsInjector.addToJSQueue("excludeURLForReplay: " + urlPattern, js);
         call.resolve();
     }
 
     @PluginMethod(returnType = PluginMethod.RETURN_PROMISE)
     public void setPIISelectors(final PluginCall call) {
-        final String js = "window._uxa = window._uxa || [];\n"
-            + "window._uxa.push([\"setPIISelectors\", " + call.getData().toString() + "]);\n";
+        final String js =
+            "window._uxa = window._uxa || [];\n" + "window._uxa.push([\"setPIISelectors\", " + call.getData().toString() + "]);\n";
         jsInjector.addToJSQueue("setPIISelectors", js);
         call.resolve();
     }

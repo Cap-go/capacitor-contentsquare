@@ -3,15 +3,13 @@ package app.capgo.contentsquare;
 import android.os.Handler;
 import android.os.Looper;
 import android.webkit.WebView;
-
+import app.capgo.contentsquare.util.JsTask;
 import com.getcapacitor.Logger;
-
 import java.util.LinkedList;
 import java.util.Queue;
 
-import app.capgo.contentsquare.util.JsTask;
-
 public class ContentsquareJSInjector {
+
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Queue<JsTask> jsQueue = new LinkedList<>();
     private final WebView webView;
@@ -40,10 +38,12 @@ public class ContentsquareJSInjector {
     }
 
     private void injectJS(final JsTask jsTask) {
-        handler.post(() -> webView.evaluateJavascript(jsTask.jsToInject, value -> {
-            Logger.debug("CSLIBCAP", "JSInjector: " + jsTask.description);
-            isInjecting = false;
-            injectNextJSFromQueue();
-        }));
+        handler.post(() ->
+            webView.evaluateJavascript(jsTask.jsToInject, (value) -> {
+                Logger.debug("CSLIBCAP", "JSInjector: " + jsTask.description);
+                isInjecting = false;
+                injectNextJSFromQueue();
+            })
+        );
     }
 }
