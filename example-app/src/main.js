@@ -1,3 +1,5 @@
+import { CapacitorUpdater } from '@capgo/capacitor-updater';
+import { Capacitor } from '@capacitor/core';
 import './style.css';
 import { ContentsquarePlugin, CurrencyCode } from '@capgo/capacitor-contentsquare';
 
@@ -73,3 +75,9 @@ dynamicVarButton.addEventListener('click', async () => {
 });
 
 setStatus('Waiting for consent');
+
+if (Capacitor.isNativePlatform()) {
+  CapacitorUpdater.notifyAppReady().catch((error) => {
+    console.error('Capgo notifyAppReady failed', error);
+  });
+}
