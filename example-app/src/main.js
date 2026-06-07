@@ -1,7 +1,7 @@
 import { CapacitorUpdater } from '@capgo/capacitor-updater';
 import { Capacitor } from '@capacitor/core';
 import './style.css';
-import { ContentsquarePlugin, CurrencyCode } from '@capgo/capacitor-contentsquare';
+import { ContentsquarePlugin } from '@capgo/capacitor-contentsquare';
 
 const output = document.getElementById('plugin-output');
 const statusBadge = document.getElementById('status-badge');
@@ -53,7 +53,7 @@ transactionButton.addEventListener('click', async () => {
   try {
     await ContentsquarePlugin.sendTransaction({
       transactionValue: 19.99,
-      transactionCurrency: CurrencyCode.EUR,
+      transactionCurrency: 'EUR',
       transactionId: `example-${Date.now()}`,
     });
     setOutput('Sent example transaction.');
