@@ -3,19 +3,19 @@ import type { ContentsquareNativePlugin, DynamicVarItem, PIIConfig, TelemetryIte
 export declare class ContentsquareWeb extends WebPlugin implements ContentsquareNativePlugin {
     optIn(): Promise<void>;
     optOut(): Promise<void>;
-    sendScreenName(_options: {
+    sendScreenName(options: {
         name: string;
     }): Promise<void>;
-    sendTransaction(_transactionItem: TransactionItem): Promise<void>;
-    sendDynamicVarWithStringValue(_dynamicVarItem: DynamicVarItem): Promise<void>;
-    sendDynamicVarWithIntValue(_dynamicVarItem: DynamicVarItem): Promise<void>;
+    sendTransaction(transactionItem: TransactionItem): Promise<void>;
+    sendDynamicVarWithStringValue(dynamicVarItem: DynamicVarItem): Promise<void>;
+    sendDynamicVarWithIntValue(dynamicVarItem: DynamicVarItem): Promise<void>;
     onReady(): Promise<void>;
-    excludeURLForReplay(_options: {
+    excludeURLForReplay(options: {
         url: string;
     }): Promise<void>;
-    setPIISelectors(_pii: PIIConfig): Promise<void>;
-    setCapturedElementsSelector(_options: {
+    setPIISelectors(pii: PIIConfig): Promise<void>;
+    setCapturedElementsSelector(options: {
         elements: string;
     }): Promise<void>;
-    collect(_telemetryItem: TelemetryItem): Promise<void>;
+    collect(telemetryItem: TelemetryItem): Promise<void>;
 }

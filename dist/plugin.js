@@ -66,31 +66,31 @@ var capacitorContentsquare = (function (exports, core) {
         async optOut() {
             throw new Error('Contentsquare is only available on native platforms.');
         }
-        async sendScreenName(_options) {
+        async sendScreenName(options) {
             throw new Error('Contentsquare is only available on native platforms.');
         }
-        async sendTransaction(_transactionItem) {
+        async sendTransaction(transactionItem) {
             throw new Error('Contentsquare is only available on native platforms.');
         }
-        async sendDynamicVarWithStringValue(_dynamicVarItem) {
+        async sendDynamicVarWithStringValue(dynamicVarItem) {
             throw new Error('Contentsquare is only available on native platforms.');
         }
-        async sendDynamicVarWithIntValue(_dynamicVarItem) {
+        async sendDynamicVarWithIntValue(dynamicVarItem) {
             throw new Error('Contentsquare is only available on native platforms.');
         }
         async onReady() {
             return;
         }
-        async excludeURLForReplay(_options) {
+        async excludeURLForReplay(options) {
             throw new Error('Contentsquare is only available on native platforms.');
         }
-        async setPIISelectors(_pii) {
+        async setPIISelectors(pii) {
             throw new Error('Contentsquare is only available on native platforms.');
         }
-        async setCapturedElementsSelector(_options) {
+        async setCapturedElementsSelector(options) {
             throw new Error('Contentsquare is only available on native platforms.');
         }
-        async collect(_telemetryItem) {
+        async collect(telemetryItem) {
             throw new Error('Contentsquare is only available on native platforms.');
         }
     }
