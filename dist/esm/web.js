@@ -6,31 +6,39 @@ export class ContentsquareWeb extends WebPlugin {
     async optOut() {
         throw new Error('Contentsquare is only available on native platforms.');
     }
-    async sendScreenName(_options) {
+    async sendScreenName(options) {
+        void options;
         throw new Error('Contentsquare is only available on native platforms.');
     }
-    async sendTransaction(_transactionItem) {
+    async sendTransaction(transactionItem) {
+        void transactionItem;
         throw new Error('Contentsquare is only available on native platforms.');
     }
-    async sendDynamicVarWithStringValue(_dynamicVarItem) {
+    async sendDynamicVarWithStringValue(dynamicVarItem) {
+        void dynamicVarItem;
         throw new Error('Contentsquare is only available on native platforms.');
     }
-    async sendDynamicVarWithIntValue(_dynamicVarItem) {
+    async sendDynamicVarWithIntValue(dynamicVarItem) {
+        void dynamicVarItem;
         throw new Error('Contentsquare is only available on native platforms.');
     }
     async onReady() {
         return;
     }
-    async excludeURLForReplay(_options) {
+    async excludeURLForReplay(options) {
+        void options;
         throw new Error('Contentsquare is only available on native platforms.');
     }
-    async setPIISelectors(_pii) {
+    async setPIISelectors(pii) {
+        void pii;
         throw new Error('Contentsquare is only available on native platforms.');
     }
-    async setCapturedElementsSelector(_options) {
+    async setCapturedElementsSelector(options) {
+        void options;
         throw new Error('Contentsquare is only available on native platforms.');
     }
-    async collect(_telemetryItem) {
+    async collect(telemetryItem) {
+        void telemetryItem;
         throw new Error('Contentsquare is only available on native platforms.');
     }
 }
