@@ -4,7 +4,7 @@ import pkg from './package.json';
 
 const config: CapacitorConfig = {
   appId: 'app.capgo.contentsquare.example',
-  appName: 'Contentsquare Example',
+  appName: '@capgo/capacitor-contentsquare',
   webDir: 'dist',
   plugins: {
     SplashScreen: {
