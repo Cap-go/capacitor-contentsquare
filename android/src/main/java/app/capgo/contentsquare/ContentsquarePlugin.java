@@ -53,6 +53,9 @@ public class ContentsquarePlugin extends Plugin {
                 @Override
                 public void notifySessionReplayEnabled(final boolean enabled) {}
 
+                @Override
+                public void notifySessionReplayQualityChanged(@NonNull final String quality) {}
+
                 @NonNull
                 @Override
                 public ExternalBridgeType getBridgeType() {
@@ -79,6 +82,10 @@ public class ContentsquarePlugin extends Plugin {
 
     @Override
     protected void handleOnDestroy() {
+        if (jsInjector != null) {
+            jsInjector.destroy();
+            jsInjector = null;
+        }
         unregisterXpfBridge();
         super.handleOnDestroy();
     }
@@ -99,7 +106,7 @@ public class ContentsquarePlugin extends Plugin {
     @PluginMethod(returnType = PluginMethod.RETURN_PROMISE)
     public void optIn(final PluginCall call) {
         new Handler(Looper.getMainLooper()).post(() -> {
-            Contentsquare.optIn(getContext());
+            Contentsquare.optIn();
             call.resolve();
         });
     }
@@ -107,7 +114,7 @@ public class ContentsquarePlugin extends Plugin {
     @PluginMethod(returnType = PluginMethod.RETURN_PROMISE)
     public void optOut(final PluginCall call) {
         new Handler(Looper.getMainLooper()).post(() -> {
-            Contentsquare.optOut(getContext());
+            Contentsquare.optOut();
             call.resolve();
         });
     }
