@@ -38,13 +38,12 @@ public class ContentsquareJSInjector {
         }
 
         destroyed = true;
-        final Runnable cleanup =
-            () -> {
-                handler.removeCallbacksAndMessages(null);
-                jsQueue.clear();
-                isInjecting = false;
-                webView = null;
-            };
+        final Runnable cleanup = () -> {
+            handler.removeCallbacksAndMessages(null);
+            jsQueue.clear();
+            isInjecting = false;
+            webView = null;
+        };
 
         if (Looper.myLooper() == Looper.getMainLooper()) {
             cleanup.run();
