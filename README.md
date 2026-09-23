@@ -18,7 +18,7 @@ The upstream product documentation is available at [docs.contentsquare.com/en/ca
 
 | Plugin version | Capacitor compatibility | Native iOS SDK | Native Android SDK |
 | -------------- | ----------------------- | -------------- | ------------------ |
-| v8.*.*         | v8.*.*                  | 4.45.4         | 4.43.3             |
+| v8.*.*         | v8.*.*                  | 4.52.4         | 4.52.4             |
 
 This is a community Capacitor 8 port. Contentsquare's official package currently targets Capacitor 7, but the documented API surface remains the same.
 

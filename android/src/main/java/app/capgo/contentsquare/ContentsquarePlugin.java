@@ -79,6 +79,10 @@ public class ContentsquarePlugin extends Plugin {
 
     @Override
     protected void handleOnDestroy() {
+        if (jsInjector != null) {
+            jsInjector.destroy();
+            jsInjector = null;
+        }
         unregisterXpfBridge();
         super.handleOnDestroy();
     }
