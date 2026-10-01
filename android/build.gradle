@@ -55,7 +55,6 @@ dependencies {
     annotationProcessor project(':capacitor-android')
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
     implementation "com.contentsquare.android:library:$contentsquareAndroidSdkVersion"
-    implementation "com.squareup.okhttp3:okhttp:4.11.0"
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
