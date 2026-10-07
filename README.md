@@ -1,10 +1,28 @@
 # @capgo/capacitor-contentsquare
-<a href="https://capgo.app/"><img src="https://capgo.app/readme-banner.svg?repo=Cap-go/capacitor-contentsquare" alt="Capgo - Instant updates for Capacitor" /></a>
+
+Add Contentsquare analytics and Session Replay to your Capacitor app with the official Contentsquare SDKs, packaged for Capacitor 8 with Swift Package Manager support.
+
+<a href="https://capgo.app/?ref=plugin_contentsquare"><img src="https://capgo.app/readme-banner.svg?repo=Cap-go/capacitor-contentsquare" alt="Capgo - Instant updates for Capacitor" /></a>
 
 <div align="center">
-  <h2><a href="https://capgo.app/?ref=plugin_contentsquare"> ➡️ Get Instant updates for your App with Capgo</a></h2>
-  <h2><a href="https://capgo.app/consulting/?ref=plugin_contentsquare"> Missing a feature? We’ll build the plugin for you 💪</a></h2>
+  <p><b>Capgo</b>: open-source live updates for Ionic and Capacitor apps. Ship OTA fixes and features instantly, without waiting for app store review.</p>
+  <h2><a href="https://capgo.app/register/?ref=plugin_contentsquare">➡️ Get started for free</a></h2>
+  <p>14-day unlimited free trial. No credit card required</p>
+  <p><a href="https://capgo.app/consulting/?ref=plugin_contentsquare">Missing a feature? We'll build the plugin for you 💪</a></p>
 </div>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Cap-go/capacitor-contentsquare/main/assets/github-social-preview.png" alt="@capgo/capacitor-contentsquare for Capacitor apps" width="300" />
+</p>
+
+## Key features
+
+- **Consent**: `optIn()` starts tracking and `optOut()` stops it and clears local state.
+- **Screen views**: `sendScreenName()` sends a screenview for the current screen.
+- **Transactions and variables**: `sendTransaction()` and `sendDynamicVar()`.
+- **Session Replay privacy**: `setPIISelectors()`, `setCapturedElementsSelector()` and `excludeURLForReplay()` control what is recorded.
+- **Official SDKs**: wraps the Contentsquare iOS and Android libraries.
+- **Platforms**: iOS and Android. Not available on web.
 
 Capacitor 8 wrapper for the official Contentsquare mobile SDKs.
 
