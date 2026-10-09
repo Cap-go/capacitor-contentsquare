@@ -2,6 +2,13 @@ import Capacitor
 import ContentsquareModule
 import Foundation
 
+private enum ContentsquareIOSBridgeError {
+    static let missingPublicTelemetryAPI =
+        "Contentsquare iOS SDK 4.52.4 has no public API equivalent to Android TelemetryInterface " +
+        "(telemetryCollect / telemetrySetXPFType). Private selectors were removed for App Store guideline 2.5.2. " +
+        "See https://github.com/Cap-go/capacitor-contentsquare/pull/14 for the iOS XPF API gap."
+}
+
 @objc(ContentsquarePlugin)
 public class ContentsquarePlugin: CAPPlugin, CAPBridgedPlugin {
     public let identifier = "ContentsquarePlugin"
@@ -182,10 +189,7 @@ public class ContentsquarePlugin: CAPPlugin, CAPBridgedPlugin {
     }
 
     @objc func collect(_ call: CAPPluginCall) {
-        // Contentsquare SDK 4.52.x does not expose XPF telemetry through a public iOS API.
-        // The native bridge keeps this method as a no-op so App Store review is not blocked by
-        // private selector dispatch (guideline 2.5.2).
-        call.resolve()
+        call.reject(ContentsquareIOSBridgeError.missingPublicTelemetryAPI)
     }
 
     @objc func onReady(_ call: CAPPluginCall) {

@@ -5,6 +5,7 @@ import type {
   ContentsquarePlugin as ContentsquarePluginType,
   DynamicVarItem,
   PIIConfig,
+  TelemetryItem,
   TransactionItem,
 } from './definitions';
 
@@ -81,6 +82,10 @@ const ContentsquarePlugin: ContentsquarePluginType = {
 
   async setCapturedElementsSelector(elements: string): Promise<void> {
     await Contentsquare.setCapturedElementsSelector({ elements });
+  },
+
+  async collect(telemetryItem: TelemetryItem): Promise<void> {
+    await Contentsquare.collect(telemetryItem);
   },
 };
 

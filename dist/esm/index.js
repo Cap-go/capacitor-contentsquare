@@ -55,6 +55,9 @@ const ContentsquarePlugin = {
     async setCapturedElementsSelector(elements) {
         await Contentsquare.setCapturedElementsSelector({ elements });
     },
+    async collect(telemetryItem) {
+        await Contentsquare.collect(telemetryItem);
+    },
 };
 export * from './definitions';
 export { Contentsquare, ContentsquarePlugin };

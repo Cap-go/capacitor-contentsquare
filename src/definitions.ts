@@ -80,7 +80,8 @@ export interface TransactionItem {
 /**
  * Internal telemetry payload.
  *
- * On iOS this bridge is a no-op: the Contentsquare SDK does not expose XPF telemetry through a public API.
+ * On iOS, `collect` fails until Contentsquare ships public XPF telemetry APIs in `CS_iOS_SDK`
+ * (Android already exposes `TelemetryInterface` in the public Android SDK).
  */
 export interface TelemetryItem {
   /**
@@ -140,6 +141,13 @@ export interface ContentsquarePlugin {
    * Allows specific elements to be captured even when the current page is masked.
    */
   setCapturedElementsSelector(elements: string): Promise<void>;
+
+  /**
+   * Sends XPF telemetry to Contentsquare (upstream Contentsquare Capacitor plugin API).
+   *
+   * Supported on Android. On iOS this rejects until Contentsquare exposes public telemetry APIs.
+   */
+  collect(telemetryItem: TelemetryItem): Promise<void>;
 }
 
 export const enum CurrencyCode {

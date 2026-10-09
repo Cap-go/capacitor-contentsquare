@@ -58,6 +58,9 @@ const ContentsquarePlugin = {
     async setCapturedElementsSelector(elements) {
         await Contentsquare.setCapturedElementsSelector({ elements });
     },
+    async collect(telemetryItem) {
+        await Contentsquare.collect(telemetryItem);
+    },
 };
 
 class ContentsquareWeb extends core.WebPlugin {

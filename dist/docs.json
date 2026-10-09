@@ -126,6 +126,24 @@
         "docs": "Allows specific elements to be captured even when the current page is masked.",
         "complexTypes": [],
         "slug": "setcapturedelementsselector"
+      },
+      {
+        "name": "collect",
+        "signature": "(telemetryItem: TelemetryItem) => Promise<void>",
+        "parameters": [
+          {
+            "name": "telemetryItem",
+            "docs": "",
+            "type": "TelemetryItem"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Sends XPF telemetry to Contentsquare (upstream Contentsquare Capacitor plugin API).\n\nSupported on Android. On iOS this rejects until Contentsquare exposes public telemetry APIs.",
+        "complexTypes": [
+          "TelemetryItem"
+        ],
+        "slug": "collect"
       }
     ],
     "properties": []
@@ -231,6 +249,29 @@
           "docs": "Attribute name or names to mask for matching elements.",
           "complexTypes": [],
           "type": "string | string[]"
+        }
+      ]
+    },
+    {
+      "name": "TelemetryItem",
+      "slug": "telemetryitem",
+      "docs": "Internal telemetry payload.\n\nOn iOS, `collect` fails until Contentsquare ships public XPF telemetry APIs in `CS_iOS_SDK`\n(Android already exposes `TelemetryInterface` in the public Android SDK).",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "name",
+          "tags": [],
+          "docs": "Telemetry key.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "tags": [],
+          "docs": "Telemetry value.",
+          "complexTypes": [],
+          "type": "string"
         }
       ]
     }

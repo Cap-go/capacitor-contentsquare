@@ -86,7 +86,16 @@ await ContentsquarePlugin.sendDynamicVar({
 
 ### App Store guideline 2.5.2
 
-This plugin uses only public Contentsquare iOS SDK APIs (for example `Contentsquare.register(webView:)`). Older versions called private SDK selectors for cross-platform framework (XPF) telemetry and bridge registration. Those calls are removed on iOS because they are not part of the public SDK surface in `CS_iOS_SDK` 4.52.x. The native `collect` bridge method remains for compatibility but is a no-op on iOS.
+This plugin uses only public Contentsquare iOS SDK APIs (for example `Contentsquare.register(webView:)`). Private selector dispatch (`NSSelectorFromString`, `perform`, and related patterns) is removed from iOS sources.
+
+**iOS gaps pending Contentsquare SDK APIs (latest checked: `CS_iOS_SDK` 4.52.4):**
+
+| Capability | Android | iOS without private selectors |
+| --- | --- | --- |
+| XPF telemetry (`collect`, startup `telemetrySetXPFType`) | Public `TelemetryInterface` | **Not available** (no public Swift/ObjC API in the binary module interface) |
+| XPF external bridge registration (`registerExternalBridge`, type Capacitor) | Public `XpfInterface` (used from Java) | **Not available** (only `_registerExternalBridgeWithParameters:` in the SDK binary) |
+
+All documented app-facing APIs (`optIn`, `optOut`, `sendScreenName`, transactions, dynamic variables, Session Replay JS controls, `onReady`) keep working on iOS via public SDK calls and WebView registration. `collect` rejects on iOS with an explicit error until Contentsquare publishes iOS APIs equivalent to Android.
 
 To enable Contentsquare in-app features on iOS, your host app still needs the upstream deeplink wiring described in the official docs:
 
@@ -105,6 +114,7 @@ To enable Contentsquare in-app features on iOS, your host app still needs the up
 * [`excludeURLForReplay(...)`](#excludeurlforreplay)
 * [`setPIISelectors(...)`](#setpiiselectors)
 * [`setCapturedElementsSelector(...)`](#setcapturedelementsselector)
+* [`collect(...)`](#collect)
 * [Interfaces](#interfaces)
 * [Enums](#enums)
 
@@ -231,6 +241,23 @@ Allows specific elements to be captured even when the current page is masked.
 --------------------
 
 
+### collect(...)
+
+```typescript
+collect(telemetryItem: TelemetryItem) => Promise<void>
+```
+
+Sends XPF telemetry to Contentsquare (upstream Contentsquare Capacitor plugin API).
+
+Supported on Android. On iOS this rejects until Contentsquare exposes public telemetry APIs.
+
+| Param               | Type                                                    |
+| ------------------- | ------------------------------------------------------- |
+| **`telemetryItem`** | <code><a href="#telemetryitem">TelemetryItem</a></code> |
+
+--------------------
+
+
 ### Interfaces
 
 
@@ -273,6 +300,19 @@ Attribute masking rule used by `setPIISelectors`.
 | -------------- | ------------------------------- | ------------------------------------------------------ |
 | **`selector`** | <code>string</code>             | CSS selector to match.                                 |
 | **`attrName`** | <code>string \| string[]</code> | Attribute name or names to mask for matching elements. |
+
+
+#### TelemetryItem
+
+Internal telemetry payload.
+
+On iOS, `collect` fails until Contentsquare ships public XPF telemetry APIs in `CS_iOS_SDK`
+(Android already exposes `TelemetryInterface` in the public Android SDK).
+
+| Prop        | Type                | Description      |
+| ----------- | ------------------- | ---------------- |
+| **`name`**  | <code>string</code> | Telemetry key.   |
+| **`value`** | <code>string</code> | Telemetry value. |
 
 
 ### Enums
