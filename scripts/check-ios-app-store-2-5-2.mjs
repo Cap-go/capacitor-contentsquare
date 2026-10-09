@@ -20,39 +20,39 @@ const iosSources = path.join(pluginRoot, "ios", "Sources");
 const RUNTIME_NAME_RULES = [
   {
     id: "NSSelectorFromString-interpolation",
-    pattern: /NSSelectorFromString\s*\([^)]*\\\(/,
+    pattern: /NSSelectorFromString\s*\([\s\S]*?\\\(/,
   },
   {
     id: "NSSelectorFromString-concatenation",
-    pattern: /NSSelectorFromString\s*\([^)]*\+/,
+    pattern: /NSSelectorFromString\s*\([\s\S]*?\+/,
   },
   {
     id: "NSSelectorFromString-non-literal",
-    pattern: /NSSelectorFromString\s*\(\s*(?!")[^)]+\)/,
+    pattern: /NSSelectorFromString\s*\(\s*(?!")[\s\S]*?\)/,
   },
   {
     id: "Selector-interpolation",
-    pattern: /(?<![A-Za-z])Selector\s*\([^)]*\\\(/,
+    pattern: /(?<![A-Za-z])Selector\s*\([\s\S]*?\\\(/,
   },
   {
     id: "Selector-concatenation",
-    pattern: /(?<![A-Za-z])Selector\s*\([^)]*\+/,
+    pattern: /(?<![A-Za-z])Selector\s*\([\s\S]*?\+/,
   },
   {
     id: "Selector-non-literal",
-    pattern: /(?<![A-Za-z])Selector\s*\(\s*(?!")[^)]+\)/,
+    pattern: /(?<![A-Za-z])Selector\s*\(\s*(?!")[\s\S]*?\)/,
   },
   {
     id: "NSClassFromString-interpolation",
-    pattern: /NSClassFromString\s*\([^)]*\\\(/,
+    pattern: /NSClassFromString\s*\([\s\S]*?\\\(/,
   },
   {
     id: "NSClassFromString-concatenation",
-    pattern: /NSClassFromString\s*\([^)]*\+/,
+    pattern: /NSClassFromString\s*\([\s\S]*?\+/,
   },
   {
     id: "NSClassFromString-non-literal",
-    pattern: /NSClassFromString\s*\(\s*(?!")[^)]+\)/,
+    pattern: /NSClassFromString\s*\(\s*(?!")[\s\S]*?\)/,
   },
   { id: "method_exchangeImplementations", pattern: /\bmethod_exchangeImplementations\b/ },
   { id: "class_replaceMethod", pattern: /\bclass_replaceMethod\b/ },
@@ -88,26 +88,106 @@ function lineHasAllowTag(lines, index) {
   return window.some((line) => line.includes(ALLOW_TAG));
 }
 
-const violations = [];
+/**
+ * Replace string literals and comments with spaces while preserving length and newlines.
+ * @param {string} source
+ */
+function stripStringsAndComments(source) {
+  const out = [...source];
+  let index = 0;
 
-for (const file of walk(iosSources)) {
-  const lines = fs.readFileSync(file, "utf8").split(/\r?\n/);
-  for (let index = 0; index < lines.length; index += 1) {
-    const line = lines[index];
-    const trimmed = line.trim();
-    if (trimmed.startsWith("//")) {
+  while (index < source.length) {
+    const char = source[index];
+    const next = source[index + 1];
+
+    if (char === "/" && next === "/") {
+      index += 2;
+      while (index < source.length && source[index] !== "\n") {
+        out[index] = " ";
+        index += 1;
+      }
       continue;
     }
 
-    for (const rule of RUNTIME_NAME_RULES) {
-      if (rule.pattern.test(line)) {
-        violations.push(`${path.relative(pluginRoot, file)}:${index + 1}: ${rule.id}`);
+    if (char === "/" && next === "*") {
+      index += 2;
+      while (index < source.length && !(source[index] === "*" && source[index + 1] === "/")) {
+        out[index] = " ";
+        index += 1;
       }
+      if (index < source.length) {
+        out[index] = " ";
+        out[index + 1] = " ";
+        index += 2;
+      }
+      continue;
     }
 
+    if (char === '"') {
+      index += 1;
+      while (index < source.length) {
+        if (source[index] === "\\" && index + 1 < source.length) {
+          out[index] = " ";
+          out[index + 1] = " ";
+          index += 2;
+          continue;
+        }
+        if (source[index] === '"') {
+          index += 1;
+          break;
+        }
+        out[index] = " ";
+        index += 1;
+      }
+      continue;
+    }
+
+    index += 1;
+  }
+
+  return out.join("");
+}
+
+function indexToLine(source, matchIndex) {
+  let line = 1;
+  for (let index = 0; index < matchIndex && index < source.length; index += 1) {
+    if (source[index] === "\n") {
+      line += 1;
+    }
+  }
+  return line;
+}
+
+function findRuntimeNameViolations(relativePath, source) {
+  const stripped = stripStringsAndComments(source);
+  const found = [];
+
+  for (const rule of RUNTIME_NAME_RULES) {
+    const pattern = new RegExp(rule.pattern.source, "g");
+    let match = pattern.exec(stripped);
+    while (match !== null) {
+      found.push(`${relativePath}:${indexToLine(source, match.index)}: ${rule.id}`);
+      match = pattern.exec(stripped);
+    }
+  }
+
+  return found;
+}
+
+const violations = [];
+
+for (const file of walk(iosSources)) {
+  const source = fs.readFileSync(file, "utf8");
+  const lines = source.split(/\r?\n/);
+  const relativePath = path.relative(pluginRoot, file);
+
+  violations.push(...findRuntimeNameViolations(relativePath, source));
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
     if (PERFORM_ON_CONTENTSQUARE.test(line) && !lineHasAllowTag(lines, index)) {
       violations.push(
-        `${path.relative(pluginRoot, file)}:${index + 1}: Contentsquare.perform missing ${ALLOW_TAG} on same or previous lines`,
+        `${relativePath}:${index + 1}: Contentsquare.perform missing ${ALLOW_TAG} on same or previous lines`,
       );
     }
   }
