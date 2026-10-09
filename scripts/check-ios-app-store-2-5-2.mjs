@@ -17,47 +17,18 @@ const pluginRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const iosSources = path.join(pluginRoot, "ios", "Sources");
 
 /** @type {{ id: string, pattern: RegExp }[]} */
-const RUNTIME_NAME_RULES = [
-  {
-    id: "NSSelectorFromString-interpolation",
-    pattern: /NSSelectorFromString\s*\([\s\S]*?\\\(/,
-  },
-  {
-    id: "NSSelectorFromString-concatenation",
-    pattern: /NSSelectorFromString\s*\([\s\S]*?\+/,
-  },
-  {
-    id: "NSSelectorFromString-non-literal",
-    pattern: /NSSelectorFromString\s*\(\s*(?!")[\s\S]*?\)/,
-  },
-  {
-    id: "Selector-interpolation",
-    pattern: /(?<![A-Za-z])Selector\s*\([\s\S]*?\\\(/,
-  },
-  {
-    id: "Selector-concatenation",
-    pattern: /(?<![A-Za-z])Selector\s*\([\s\S]*?\+/,
-  },
-  {
-    id: "Selector-non-literal",
-    pattern: /(?<![A-Za-z])Selector\s*\(\s*(?!")[\s\S]*?\)/,
-  },
-  {
-    id: "NSClassFromString-interpolation",
-    pattern: /NSClassFromString\s*\([\s\S]*?\\\(/,
-  },
-  {
-    id: "NSClassFromString-concatenation",
-    pattern: /NSClassFromString\s*\([\s\S]*?\+/,
-  },
-  {
-    id: "NSClassFromString-non-literal",
-    pattern: /NSClassFromString\s*\(\s*(?!")[\s\S]*?\)/,
-  },
+const GLOBAL_RULES = [
   { id: "method_exchangeImplementations", pattern: /\bmethod_exchangeImplementations\b/ },
   { id: "class_replaceMethod", pattern: /\bclass_replaceMethod\b/ },
   { id: "dlopen", pattern: /\bdlopen\s*\(/ },
   { id: "dlsym", pattern: /\bdlsym\s*\(/ },
+];
+
+/** @type {{ idPrefix: string, pattern: RegExp }[]} */
+const CALLEE_CALLS = [
+  { idPrefix: "NSSelectorFromString", pattern: /\bNSSelectorFromString\s*\(/g },
+  { idPrefix: "Selector", pattern: /(?<![A-Za-z])Selector\s*\(/g },
+  { idPrefix: "NSClassFromString", pattern: /\bNSClassFromString\s*\(/g },
 ];
 
 const ALLOW_TAG = "appstore-2.5.2-allow";
@@ -89,11 +60,12 @@ function lineHasAllowTag(lines, index) {
 }
 
 /**
- * Replace string literals and comments with spaces while preserving length and newlines.
+ * Replace string literals and comments with spaces while preserving UTF-16 length.
+ * Swift string interpolation (`\(`) stays visible so runtime-name rules can match it.
  * @param {string} source
  */
 function stripStringsAndComments(source) {
-  const out = [...source];
+  const out = source.split("");
   let index = 0;
 
   while (index < source.length) {
@@ -127,6 +99,10 @@ function stripStringsAndComments(source) {
       index += 1;
       while (index < source.length) {
         if (source[index] === "\\" && index + 1 < source.length) {
+          if (source[index + 1] === "(") {
+            index += 2;
+            continue;
+          }
           out[index] = " ";
           out[index + 1] = " ";
           index += 2;
@@ -148,6 +124,40 @@ function stripStringsAndComments(source) {
   return out.join("");
 }
 
+function findMatchingParen(source, openParenIndex) {
+  let depth = 0;
+
+  for (let index = openParenIndex; index < source.length; index += 1) {
+    const char = source[index];
+
+    if (char === '"') {
+      index += 1;
+      while (index < source.length) {
+        if (source[index] === "\\" && index + 1 < source.length) {
+          index += 2;
+          continue;
+        }
+        if (source[index] === '"') {
+          break;
+        }
+        index += 1;
+      }
+      continue;
+    }
+
+    if (char === "(") {
+      depth += 1;
+    } else if (char === ")") {
+      depth -= 1;
+      if (depth === 0) {
+        return index;
+      }
+    }
+  }
+
+  return -1;
+}
+
 function indexToLine(source, matchIndex) {
   let line = 1;
   for (let index = 0; index < matchIndex && index < source.length; index += 1) {
@@ -158,11 +168,45 @@ function indexToLine(source, matchIndex) {
   return line;
 }
 
-function findRuntimeNameViolations(relativePath, source) {
-  const stripped = stripStringsAndComments(source);
+function analyzeCalleeCalls(relativePath, source, stripped) {
   const found = [];
 
-  for (const rule of RUNTIME_NAME_RULES) {
+  for (const callee of CALLEE_CALLS) {
+    const pattern = new RegExp(callee.pattern.source, callee.pattern.flags);
+    let match = pattern.exec(stripped);
+
+    while (match !== null) {
+      const openParenIndex = match.index + match[0].length - 1;
+      const closeParenIndex = findMatchingParen(stripped, openParenIndex);
+      const line = indexToLine(source, match.index);
+
+      if (closeParenIndex > openParenIndex) {
+        const argument = stripped.slice(openParenIndex + 1, closeParenIndex);
+        const trimmedArgument = argument.trimStart();
+
+        if (/\\\(/u.test(argument)) {
+          found.push(`${relativePath}:${line}: ${callee.idPrefix}-interpolation`);
+        }
+        if (/\+/.test(argument)) {
+          found.push(`${relativePath}:${line}: ${callee.idPrefix}-concatenation`);
+        }
+        if (!trimmedArgument.startsWith('"')) {
+          found.push(`${relativePath}:${line}: ${callee.idPrefix}-non-literal`);
+        }
+      }
+
+      match = pattern.exec(stripped);
+    }
+  }
+
+  return found;
+}
+
+function findRuntimeNameViolations(relativePath, source) {
+  const stripped = stripStringsAndComments(source);
+  const found = analyzeCalleeCalls(relativePath, source, stripped);
+
+  for (const rule of GLOBAL_RULES) {
     const pattern = new RegExp(rule.pattern.source, "g");
     let match = pattern.exec(stripped);
     while (match !== null) {
