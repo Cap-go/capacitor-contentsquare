@@ -80,6 +80,8 @@ export interface TransactionItem {
 }
 /**
  * Internal telemetry payload.
+ *
+ * On iOS this bridge is a no-op: the Contentsquare SDK does not expose XPF telemetry through a public API.
  */
 export interface TelemetryItem {
     /**

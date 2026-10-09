@@ -2,23 +2,6 @@ import Capacitor
 import ContentsquareModule
 import Foundation
 
-@objc(_ExternalBridgeInterface)
-protocol ExternalBridgeInterface {
-    @objc func takeSnapshot(parameters: [String: Any])
-    @objc func enableSessionReplay(parameters: [String: Any])
-    @objc func enableAPIErrors(parameters: [String: Any])
-    @objc func enableCrashReporter(parameters: [String: Any])
-    @objc func setTagId(_: String)
-    @objc func updateFeatureFlags(_: [[String: Any]])
-    @objc func notifyCSInAppEnabled(parameters: [String: Any])
-    @objc func updateBridgeConfig(_: Data)
-    @objc func shouldHandleWebView(_: AnyObject)
-    @objc func shouldHandleExternalBridge(_: AnyObject)
-    @objc func enableUnmaskAll(parameters: [String: Any])
-    @objc func notifySDKStateChanges(parameters: [String: Any])
-    @objc func notifySrMaskingVisualisationEnabled(parameters: [String: Any])
-}
-
 @objc(ContentsquarePlugin)
 public class ContentsquarePlugin: CAPPlugin, CAPBridgedPlugin {
     public let identifier = "ContentsquarePlugin"
@@ -37,7 +20,6 @@ public class ContentsquarePlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "onReady", returnType: CAPPluginReturnPromise)
     ]
 
-    private var telemetry: ContentsquareTelemetry?
     private var tagInjector: ContentsquareTagInjector?
 
     override public func load() {
@@ -47,9 +29,6 @@ public class ContentsquarePlugin: CAPPlugin, CAPBridgedPlugin {
         }
 
         Contentsquare.register(webView: webView)
-        registerExternalBridge()
-        telemetry = ContentsquareTelemetry()
-        telemetry?.setXPFType()
         tagInjector = ContentsquareTagInjector(webView: webView)
     }
 
@@ -203,29 +182,14 @@ public class ContentsquarePlugin: CAPPlugin, CAPBridgedPlugin {
     }
 
     @objc func collect(_ call: CAPPluginCall) {
-        guard let telemetry else {
-            call.reject("Telemetry is not available.")
-            return
-        }
-
-        let name = call.getString("name", "")
-        let value = call.getString("value", "")
-        telemetry.collect(name: name, value: value)
+        // Contentsquare SDK 4.52.x does not expose XPF telemetry through a public iOS API.
+        // The native bridge keeps this method as a no-op so App Store review is not blocked by
+        // private selector dispatch (guideline 2.5.2).
         call.resolve()
     }
 
     @objc func onReady(_ call: CAPPluginCall) {
         call.resolve()
-    }
-
-    private func registerExternalBridge() {
-        Contentsquare.perform(
-            NSSelectorFromString("_registerExternalBridgeWithParameters:"),
-            with: [
-                "interface": self,
-                "type": 4
-            ] as [String: Any]
-        )
     }
 
     private func javaScriptStringLiteral(_ value: String) throws -> String {
@@ -237,46 +201,5 @@ public class ContentsquarePlugin: CAPPlugin, CAPBridgedPlugin {
         }
 
         return String(serialized.dropFirst().dropLast())
-    }
-}
-
-extension ContentsquarePlugin: ExternalBridgeInterface {
-    func notifySDKStateChanges(parameters: [String: Any]) {
-    }
-
-    func notifySrMaskingVisualisationEnabled(parameters: [String: Any]) {
-    }
-
-    func takeSnapshot(parameters: [String: Any]) {
-    }
-
-    func enableSessionReplay(parameters: [String: Any]) {
-    }
-
-    func enableAPIErrors(parameters: [String: Any]) {
-    }
-
-    func enableCrashReporter(parameters: [String: Any]) {
-    }
-
-    func setTagId(_: String) {
-    }
-
-    func updateFeatureFlags(_: [[String: Any]]) {
-    }
-
-    func notifyCSInAppEnabled(parameters: [String: Any]) {
-    }
-
-    func updateBridgeConfig(_: Data) {
-    }
-
-    func shouldHandleWebView(_: AnyObject) {
-    }
-
-    func shouldHandleExternalBridge(_: AnyObject) {
-    }
-
-    func enableUnmaskAll(parameters: [String: Any]) {
     }
 }

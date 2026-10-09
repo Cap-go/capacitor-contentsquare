@@ -84,6 +84,10 @@ await ContentsquarePlugin.sendDynamicVar({
 
 ## iOS Setup
 
+### App Store guideline 2.5.2
+
+This plugin uses only public Contentsquare iOS SDK APIs (for example `Contentsquare.register(webView:)`). Older versions called private SDK selectors for cross-platform framework (XPF) telemetry and bridge registration. Those calls are removed on iOS because they are not part of the public SDK surface in `CS_iOS_SDK` 4.52.x. The native `collect` bridge method remains for compatibility but is a no-op on iOS.
+
 To enable Contentsquare in-app features on iOS, your host app still needs the upstream deeplink wiring described in the official docs:
 
 1. Add the `cs-$(PRODUCT_BUNDLE_IDENTIFIER)` URL scheme to the app.
