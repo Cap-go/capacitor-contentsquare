@@ -7,6 +7,7 @@
  * appstore-2.5.2-allow on private dispatch sites.
  *
  * Fails on runtime-built selector or class names (interpolation, concatenation, variables).
+ * Call-argument scans use balanced parentheses so unrelated `+` operators are ignored.
  */
 
 import fs from "node:fs";
