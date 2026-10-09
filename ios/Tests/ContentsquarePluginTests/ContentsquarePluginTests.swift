@@ -8,7 +8,8 @@ final class ContentsquarePluginTests: XCTestCase {
         "method_exchangeImplementations",
         "class_replaceMethod",
         "dlopen(",
-        "dlsym("
+        "dlsym(",
+        "valueForKey"
     ]
 
     func testIOSPluginSourcesAvoidDynamicDispatchPatterns() throws {
@@ -19,7 +20,7 @@ final class ContentsquarePluginTests: XCTestCase {
             .deletingLastPathComponent()
             .deletingLastPathComponent()
 
-        let sourcesDirectory = pluginRoot.appendingPathComponent("ios/Sources/ContentsquarePlugin", isDirectory: true)
+        let sourcesDirectory = pluginRoot.appendingPathComponent("ios/Sources", isDirectory: true)
         let swiftFiles = try FileManager.default.subpathsOfDirectory(atPath: sourcesDirectory.path)
             .filter { $0.hasSuffix(".swift") }
             .map { sourcesDirectory.appendingPathComponent($0) }

@@ -22,8 +22,8 @@ const RULES = [
   { id: "class_replaceMethod", pattern: /\bclass_replaceMethod\b/ },
   { id: "dlopen", pattern: /\bdlopen\s*\(/ },
   { id: "dlsym", pattern: /\bdlsym\s*\(/ },
-  { id: "valueForKey:", pattern: /\bvalueForKey:\b/ },
-  { id: "setValue:forKey:", pattern: /\bsetValue:\s*.*\s*forKey:\b/ },
+  { id: "valueForKey", pattern: /\bvalueForKey\b|\bvalue\s*\(\s*forKey\s*:/ },
+  { id: "setValue:forKey:", pattern: /\bsetValue\b[^\n]*\bforKey\s*:/ },
 ];
 
 function walk(dir, files = []) {
@@ -49,7 +49,7 @@ function walk(dir, files = []) {
 const violations = [];
 
 for (const file of walk(iosSources)) {
-  const lines = fs.readFileSync(file, "utf8").split("\n");
+  const lines = fs.readFileSync(file, "utf8").split(/\r?\n/);
   for (let index = 0; index < lines.length; index += 1) {
     const line = lines[index];
     for (const rule of RULES) {
