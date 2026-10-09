@@ -42,6 +42,8 @@ jobs:
         run: bun run check:wiring
       - name: Check Cap 9 deprecated APIs
         run: bun run check:cap9-deprecated
+      - name: Check iOS App Store 2.5.2 private API guard
+        run: bun run check:ios-app-store-2-5-2
       - name: Setup java
         uses: actions/setup-java@v6
         with:
@@ -72,6 +74,8 @@ jobs:
         run: bun run check:wiring
       - name: Check Cap 9 deprecated APIs
         run: bun run check:cap9-deprecated
+      - name: Check iOS App Store 2.5.2 private API guard
+        run: bun run check:ios-app-store-2-5-2
       - name: Build
         id: build_code
         run: bun run verify:ios
