@@ -219,8 +219,14 @@ public class ContentsquarePlugin: CAPPlugin, CAPBridgedPlugin {
     }
 
     private func registerExternalBridge() {
+        let selector = ContentsquarePrivateAPI.registerExternalBridgeSelector
+        guard Contentsquare.responds(to: selector) else {
+            return
+        }
+
+        // appstore-2.5.2-allow: Undocumented Contentsquare external bridge registration for Capacitor XPF type 4.
         Contentsquare.perform(
-            NSSelectorFromString("_registerExternalBridgeWithParameters:"),
+            selector,
             with: [
                 "interface": self,
                 "type": 4
