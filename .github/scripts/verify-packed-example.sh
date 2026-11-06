@@ -44,8 +44,9 @@ case "$platform" in
       bunx cap add android
     fi
     bunx cap sync android
+    node "$repo_root/.github/scripts/patch-example-android-release-minify.mjs" "$test_app/android/app/build.gradle"
     cd android
-    ./gradlew build test
+    ./gradlew build test assembleRelease
     ;;
   ios)
     if [ ! -d ios ]; then
