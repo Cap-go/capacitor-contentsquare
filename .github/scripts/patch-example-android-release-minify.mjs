@@ -14,6 +14,10 @@ if (!file) {
 
 let text = fs.readFileSync(file, "utf8");
 if (text.includes("cursor-r8-ci")) {
+  if (!/minifyEnabled(?:\s*=\s*|\s+)true/.test(text) || !/shrinkResources(?:\s*=\s*|\s+)true/.test(text)) {
+    console.error("[patch-example-android-release-minify] cursor-r8-ci marker present but release minify or resource shrinking is disabled");
+    process.exit(1);
+  }
   process.exit(0);
 }
 
@@ -27,7 +31,7 @@ const insert = `        release {
             minifyEnabled true
             shrinkResources true
             signingConfig signingConfigs.debug
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }`;
 
 if (!text.includes(needle)) {
